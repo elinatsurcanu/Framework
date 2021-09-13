@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="namesCtrl">
+
+<p>Заполните формуляр:</p>
+<p>Имя: <input type="text" ng-model="firstName"></p>
+<p>Фамилия: <input type="text" ng-model="lastName"></p>
+<p>Отчество: <input type="text" ng-model="oName"></p>
+<p>Дата рождения: <input type="date" ng-model="bday"> </p>
+<p>Факультет:<input type="text" ng-model="test"></p>
+
+<ul>
+  <li ng-repeat="x in facult | filter:test">
+    {{ x }}
+  </li>
+</ul>
+
+<hr>
+<p>  {{ firstName | uppercase| limitTo:1  }}{{ firstName | lowercase|  limitTo:20:1  }}</p>
+<p> {{ lastName | uppercase| limitTo:1  }}{{ lastName | lowercase|  limitTo:20:1  }} </p>
+<p> {{ oName | uppercase| limitTo:1  }}{{ oName | lowercase|  limitTo:20:1  }}</p>
+<p> Родился {{ bday | date :  "dd MMMM y"}}</p>
+<p> Учится на факультете {{test }}</p>
+
+</div>
+
+<script>
+angular.module('myApp', []).controller('namesCtrl', function($scope) {
+    $scope.facult = [
+        'Права',
+        'Биологии',
+        'Математики и Информатики',
+        'Физики',
+    ];
+
+});
+
+</script>
+
+</body>
+</html>
