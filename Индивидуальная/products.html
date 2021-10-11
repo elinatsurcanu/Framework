@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Beauty Salon</title>
+    <link rel="shortcut icon" href="images/logos/logo.jpg">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body ng-app="myApp" ng-controller="productsCtrl">
+
+    <header>
+        <div class="wrapper container">
+            <nav class="navbar navbar-expand-lg row">
+                <a class="navbar-brand col-xs-2" href="index.html">
+                    <img width="200px" height="100px" class="img-responsive" src="images/logos/logo.jpg" alt="Beauty Salon">
+                </a>
+
+                <nav class="two">
+                    <ul>
+                        <li><a href="index.html"><i class="fa fa-home fa-fw"></i>Главная</a></li>
+                        <li><a href="aboutUs.html">О нас</a></li>
+                        <li><a href="products.html">Услуги</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                        <li ng-show="isSignIn == false">
+                            <button id="myBtn">Вход</button>
+                        </li>
+                        <li ng-show="isSignIn == true">
+                            <button class="btn-success">{{login | uppercase}}</button>
+                        </li>
+                        <li ng-show="isSignIn == true">
+                            <button class="btn-danger" ng-click="isSignIn = false">Выход</button>
+                        </li>
+                    </ul>
+                </nav>
+
+            </nav>
+        </div>
+    </header>
+
+
+
+    <div class="container" ng-init="orderByPrice=true" style="background-color: #e6d4b3; ">
+
+        <hhh  class="text-center text-uppercase font-weight-bold"></hhh>
+        <button ng-click="addNewService()" ng-show="isSignIn == true" class="btn btn-success btn-block">Добавить товар</button> <br>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Поиск</span>
+            </div>
+            <input class="form-control" type="text" ng-model="search">
+        </div> <br>
+        <button class="btn btn-light" ng-click="orderByMe('price')">Сортировка по цене</button>
+        <button class="btn btn-light" ng-click="orderByMe('title')">Сортировка по наименованию</button>
+
+        
+      
+        <div class="row" ng-init="items.sum=0" >
+            <div ng-repeat="item in services | limitTo: 8 | filter : search | orderBy : myOrderBy : myReverseBy | filter : myFilter">
+                <div class="card" style="width:250px; padding-top: 20px; margin: 10px;">
+                    <img class="card-img-top" src="{{item.image}}" alt="Card image" style="width:100%">
+                    <div class="card-body">
+
+                        <input ng-disabled="editing == false" class="form-control btn-editing" type="text" ng-model="item.title">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text btn-editing">MDL</span>
+                            </div>
+                            <input ng-disabled="editing == false" class="form-control btn-editing" type="number" ng-model="item.price">
+                        </div>
+
+                        <button class="btn btn-info btn-block"  ng-click="items.sum = items.sum + item.price">Добавить</button>
+
+                        <a ng-click="editing = !editing" ng-show="isSignIn == true && editing == false" href="#" class="btn btn-warning btn-block"> Edit</a>
+
+                        <a ng-click="editing = !editing" ng-show="isSignIn == true && editing == true" href="#" class="btn btn-success btn-block"> Save</a>
+                        <a ng-click="removeProduct(item.title)" ng-show="isSignIn == true" href="#" class="btn btn-danger btn-block"> Delete</a>
+                    </div>
+                </div>
+            </div>
+			<h2>Итого к оплате: {{items.sum}}</h2>
+        </div>
+		
+		
+    </div>
+
+
+    <div class="footer-copyright text-center py-3">© 2021 Copyright:
+        <a href="index.html"> Beauty Salon</a>
+    </div>
+    </footer>
+
+  <div id="myModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h2 class="text-center text-uppercase font-weight-bold">Авторизация</h2> <br>
+                <form ng-submit="signIn()">
+                    <h2 class="text-center">Логин</h2>
+                    <input ng-model="inputLogin" class="form-control" type="text"> <br>
+
+                    <h2 class="text-center">Пароль</h2>
+                    <input ng-model="inputPass" class="form-control" type="password"> <br>
+
+                    <input class="btn btn-primary btn-lg btn-block" style="background-color:#4f4835; color:white;" type="submit" value="Войти"> <br>
+                 
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/modalView.js"></script>
+    <script src="js/myApp.js"></script>
+    <script src="js/productsCtrl.js"></script>
+	<script src="question.js"></script>
+</body>
+
+</html>
